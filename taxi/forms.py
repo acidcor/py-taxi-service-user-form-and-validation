@@ -13,7 +13,32 @@ class DriverLicenseUpdateForm(forms.ModelForm):
         fields = ("license_number",)
 
     def clean_license_number(self):
-        license_number = self.cleaned_data["license_number"]
+        return validate_license_number(self)
+
+
+class DriverCreationForm(UserCreationForm):
+    class Meta:
+        model = get_user_model()
+        fields = ("username", "license_number")
+
+    def clean_license_number(self):
+        return validate_license_number(self)
+
+
+
+class CarCreationForm(forms.ModelForm):
+    drivers = forms.ModelMultipleChoiceField(
+        queryset=get_user_model().objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+    )
+
+    class Meta:
+        model = Car
+        fields = "__all__"
+
+def validate_license_number(value):
+        license_number = value.cleaned_data["license_number"]
 
         if len(license_number) != 8:
             raise ValidationError(
@@ -32,21 +57,3 @@ class DriverLicenseUpdateForm(forms.ModelForm):
             )
 
         return license_number
-
-
-class DriverCreationForm(DriverLicenseUpdateForm):
-    class Meta:
-        model = get_user_model()
-        fields = ("username", "license_number")
-
-
-class CarCreationForm(forms.ModelForm):
-    drivers = forms.ModelMultipleChoiceField(
-        queryset=get_user_model().objects.all(),
-        required=False,
-        widget=forms.CheckboxSelectMultiple,
-    )
-
-    class Meta:
-        model = Car
-        fields = "__all__"
