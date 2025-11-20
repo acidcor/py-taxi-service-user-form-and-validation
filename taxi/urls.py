@@ -14,7 +14,7 @@ from .views import (
     ManufacturerListView,
     ManufacturerCreateView,
     ManufacturerUpdateView,
-    ManufacturerDeleteView,
+    ManufacturerDeleteView, DriverDeleteView,
 )
 
 urlpatterns = [
@@ -56,6 +56,11 @@ urlpatterns = [
         DriverUpdateView.as_view(),
         name="driver-update"
     ),
+    path(
+        "drivers/delete/<int:pk>/",
+        DriverDeleteView.as_view(),
+        name="driver-delete"
+    )
 ]
 
 app_name = "taxi"
