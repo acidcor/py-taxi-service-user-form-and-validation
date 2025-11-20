@@ -25,7 +25,6 @@ class DriverCreationForm(UserCreationForm):
         return validate_license_number(self)
 
 
-
 class CarCreationForm(forms.ModelForm):
     drivers = forms.ModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),
@@ -37,23 +36,24 @@ class CarCreationForm(forms.ModelForm):
         model = Car
         fields = "__all__"
 
+
 def validate_license_number(value):
-        license_number = value.cleaned_data["license_number"]
+    license_number = value.cleaned_data["license_number"]
 
-        if len(license_number) != 8:
-            raise ValidationError(
-                "License number must be exactly 8 characters long"
-            )
+    if len(license_number) != 8:
+        raise ValidationError(
+            "License number must be exactly 8 characters long"
+        )
 
-        if (not license_number[:3].isalpha()
-                or (license_number[:3] != license_number[:3].upper())):
-            raise ValidationError(
-                "First 3 characters should be uppercase letters"
-            )
+    if (not license_number[:3].isalpha()
+            or (license_number[:3] != license_number[:3].upper())):
+        raise ValidationError(
+            "First 3 characters should be uppercase letters"
+        )
 
-        if not license_number[-5:].isdigit():
-            raise ValidationError(
-                "Last 5 characters should be numbers"
-            )
+    if not license_number[-5:].isdigit():
+        raise ValidationError(
+            "Last 5 characters should be numbers"
+        )
 
-        return license_number
+    return license_number
